@@ -1,0 +1,235 @@
+!
+version 15.1
+no service timestamps log datetime msec
+no service timestamps debug datetime msec
+no service password-encryption
+!
+hostname Router
+!
+!
+!
+!
+ip dhcp excluded-address 10.81.184.1
+ip dhcp excluded-address 10.81.184.129
+ip dhcp excluded-address 10.81.185.1
+ip dhcp excluded-address 10.81.185.129
+ip dhcp excluded-address 10.81.184.65
+!
+ip dhcp pool 576
+ network 10.81.184.0 255.255.255.192
+ default-router 10.81.184.1
+ dns-server 10.81.185.130
+ip dhcp pool 577
+ network 10.81.184.128 255.255.255.128
+ default-router 10.81.184.129
+ dns-server 10.81.185.130
+ip dhcp pool 578
+ network 10.81.185.0 255.255.255.128
+ default-router 10.81.185.1
+ dns-server 10.81.185.130
+ip dhcp pool 580
+ network 10.81.184.64 255.255.255.192
+ default-router 10.81.184.65
+ option 150 ip 10.81.184.65
+ip dhcp pool 579
+ dns-server 10.81.185.130
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+!
+!
+!
+license udi pid CISCO2811/K9 sn FTX1017PDDU-
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+spanning-tree mode pvst
+!
+!
+!
+!
+!
+!
+interface FastEthernet0/0
+ ip address 10.81.189.1 255.255.255.128
+ ip access-group 100 in
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/0.1
+ encapsulation dot1Q 576
+ ip address 10.81.184.1 255.255.255.192
+ ip access-group 101 in
+!
+interface FastEthernet0/0.2
+ encapsulation dot1Q 577
+ ip address 10.81.184.129 255.255.255.128
+ ip access-group 102 in
+!
+interface FastEthernet0/0.3
+ encapsulation dot1Q 578
+ ip address 10.81.185.1 255.255.255.128
+ ip access-group 103 in
+!
+interface FastEthernet0/0.4
+ encapsulation dot1Q 579
+ ip address 10.81.185.129 255.255.255.128
+!
+interface FastEthernet0/0.5
+ encapsulation dot1Q 580
+ ip address 10.81.184.65 255.255.255.192
+ ip access-group 105 in
+!
+interface FastEthernet0/1
+ ip address 121.60.203.73 255.255.255.252
+ duplex auto
+ speed auto
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+router ospf 1
+ log-adjacency-changes
+ network 10.81.189.0 0.0.0.127 area 0
+ network 10.81.184.0 0.0.1.255 area 1
+!
+router rip
+!
+ip classless
+ip route 0.0.0.0 0.0.0.0 121.60.203.74 
+!
+ip flow-export version 9
+!
+!
+access-list 101 deny ip any host 10.81.184.1
+access-list 101 deny ip any host 10.81.184.129
+access-list 101 deny ip any host 10.81.185.1
+access-list 101 deny ip any host 10.81.185.129
+access-list 101 deny ip any host 10.81.184.65
+access-list 101 permit icmp any 10.81.185.128 0.0.0.127 echo-reply
+access-list 101 permit tcp any 10.81.185.128 0.0.0.127 eq www
+access-list 101 permit tcp any 10.81.185.128 0.0.0.127 eq 443
+access-list 101 permit udp any 10.81.185.128 0.0.0.127 eq domain
+access-list 101 deny ip any 10.81.185.128 0.0.0.127
+access-list 101 permit ip 10.81.184.0 0.0.0.63 any
+access-list 101 permit udp any eq bootpc any eq bootps
+access-list 102 deny ip any host 10.81.184.1
+access-list 102 deny ip any host 10.81.184.129
+access-list 102 deny ip any host 10.81.185.1
+access-list 102 deny ip any host 10.81.185.129
+access-list 102 deny ip any host 10.81.184.65
+access-list 102 permit icmp any 10.81.185.128 0.0.0.127 echo-reply
+access-list 102 permit tcp any 10.81.185.128 0.0.0.127 eq www
+access-list 102 permit tcp any 10.81.185.128 0.0.0.127 eq 443
+access-list 102 permit udp any 10.81.185.128 0.0.0.127 eq domain
+access-list 102 deny ip any 10.81.185.128 0.0.0.127
+access-list 102 permit ip 10.81.184.128 0.0.0.63 any
+access-list 102 permit udp any eq bootpc any eq bootps
+access-list 103 deny ip any host 10.81.184.1
+access-list 103 deny ip any host 10.81.184.129
+access-list 103 deny ip any host 10.81.185.1
+access-list 103 deny ip any host 10.81.185.129
+access-list 103 deny ip any host 10.81.184.65
+access-list 103 permit icmp any 10.81.185.128 0.0.0.127 echo-reply
+access-list 103 permit tcp any 10.81.185.128 0.0.0.127 eq www
+access-list 103 permit tcp any 10.81.185.128 0.0.0.127 eq 443
+access-list 103 permit udp any 10.81.185.128 0.0.0.127 eq domain
+access-list 103 deny ip any 10.81.185.128 0.0.0.127
+access-list 103 permit ip 10.81.185.0 0.0.0.127 any
+access-list 103 permit udp any eq bootpc any eq bootps
+access-list 105 deny ip any host 10.81.184.1
+access-list 105 deny ip any host 10.81.184.129
+access-list 105 deny ip any host 10.81.185.1
+access-list 105 deny ip any host 10.81.185.129
+access-list 105 permit icmp any 10.81.185.128 0.0.0.127 echo-reply
+access-list 105 permit tcp any 10.81.185.128 0.0.0.127 eq www
+access-list 105 permit tcp any 10.81.185.128 0.0.0.127 eq 443
+access-list 105 permit udp any 10.81.185.128 0.0.0.127 eq domain
+access-list 105 deny ip any 10.81.185.128 0.0.0.127
+access-list 105 permit ip 10.81.184.64 0.0.0.63 any
+access-list 105 permit udp any eq bootpc any eq bootps
+access-list 100 deny ip 10.81.185.128 0.0.0.127 any
+access-list 100 permit tcp any 10.81.185.128 0.0.0.127 eq www
+access-list 100 permit tcp any 10.81.185.128 0.0.0.127 eq 443
+access-list 100 permit udp any 10.81.185.128 0.0.0.127 eq domain
+access-list 100 deny ip 10.81.184.0 0.0.0.63 any
+access-list 100 deny ip any host 10.81.184.1
+access-list 100 permit ip any 10.81.184.0 0.0.0.63
+access-list 100 deny ip 10.81.184.128 0.0.0.63 any
+access-list 100 deny ip any host 10.81.184.129
+access-list 100 permit ip any 10.81.184.128 0.0.0.63
+access-list 100 deny ip 10.81.185.0 0.0.0.127 any
+access-list 100 deny ip any host 10.81.185.1
+access-list 100 permit ip any 10.81.185.0 0.0.0.127
+access-list 100 deny ip 10.81.184.0 0.0.0.127 any
+access-list 100 permit ip any 10.81.184.0 0.0.0.127
+access-list 100 permit ip any 10.81.189.0 0.0.0.127
+access-list 100 deny ip any host 10.81.185.129
+access-list 100 permit icmp any 10.81.185.128 0.0.0.127
+access-list 100 permit ospf any any
+access-list 100 deny ip 10.81.184.64 0.0.0.63 any
+access-list 100 permit ip any 10.81.184.64 0.0.0.63
+!
+!
+!
+!
+!
+dial-peer voice 585 voip
+ destination-pattern 2...
+ session target ipv4:10.81.186.225
+!
+dial-peer voice 590 voip
+ destination-pattern 3...
+ session target ipv4:10.81.187.193
+!
+dial-peer voice 595 voip
+ destination-pattern 4...
+ session target ipv4:10.81.188.225
+!
+telephony-service
+ max-ephones 2
+ max-dn 2
+ ip source-address 10.81.184.65 port 2000
+ auto assign 1 to 2
+!
+ephone-dn 1
+ number 1001
+!
+ephone-dn 2
+ number 1002
+!
+ephone 1
+ device-security-mode none
+ mac-address 0050.0F39.832E
+ type 7960
+ button 1:1
+!
+ephone 2
+ device-security-mode none
+ mac-address 0000.0CEB.8026
+ type 7960
+ button 1:2
+!
+line con 0
+!
+line aux 0
+!
+line vty 0 4
+ login
+!
+!
+!
+end
+
